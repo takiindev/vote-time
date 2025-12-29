@@ -1,0 +1,332 @@
+*{
+  padding: 0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui;
+  background-color: #f4f6f8;
+}
+
+.page {
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 350px));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: rgb(73, 73, 73);
+}
+
+.card:hover {
+  background: #f0f0f0;
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.card p strong {
+  font-weight: bold;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.page-header h2 {
+  color: rgb(73, 73, 73);
+  margin: 0;
+}
+
+.add-btn {
+  font-size: 26px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  width: 320px;
+  border-radius: 10px;
+}
+
+.modal-box input,
+.modal-box textarea {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.page {
+  background: #f4f6f8;
+  padding: 20px;
+}
+
+.form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.form input {
+  padding: 6px;
+}
+
+.form button {
+  background: #f4f6f8;
+  color: rgb(73, 73, 73);
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.form button:hover {
+  background: rgb(199, 199, 199);
+}
+
+.container {
+  position: relative;
+  display: flex;
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow-x: auto;
+  height: auto;
+  margin-top: 20px;
+}
+
+.time-column {
+  color: black;
+  min-width: 140px;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+  position: sticky;
+  left: 100px;
+  z-index: 11;
+}
+
+.session-column {
+  position: sticky;
+  left: 0;
+  color: black;
+  min-width: 100px;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+}
+
+.session-cell {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.time-cell {
+  height: 40px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  padding: 6px;
+  color: #555;
+}
+
+.user-column {
+  min-width: 160px;
+  border-right: 1px solid #eee;
+  opacity: 0.4;
+  pointer-events: none;
+  background: #fff;
+}
+
+.user-column.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.user-header {
+  height: 40px;
+  border-bottom: 1px solid #ddd;
+  background: #f1f1f1;
+  text-align: center;
+  line-height: 40px;
+  font-weight: bold;
+  position: relative;
+  color: rgb(125, 125, 125);
+}
+
+.tooltip {
+  position: absolute;
+  top: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
+}
+
+.user-header:hover .tooltip {
+  display: block;
+}
+
+.slot {
+  height: 40px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.slot.active {
+  background: #4caf50;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 10px;
+  background: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  color: black;
+}
+
+.page > h2,
+.page > h3{
+  color: rgb(73, 73, 73);
+}
+
+.page > h2{
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.page > h3{
+  margin-bottom: 20px;
+}
+
+/* Style cho button Quay lại */
+.page button:first-child {
+  background: #f4f6f8;
+  color:  rgb(73, 73, 73);;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  margin-bottom: 10px;
+}
+
+.page button:first-child:hover {
+  background: rgb(199, 199, 199);
+}
+
+.time-cell1{
+  height: calc(12 * 40px);
+}
+
+.time-cell2{
+  height: calc(5 * 40px);
+}
+
+.time-cell3{
+  height: calc(7 * 40px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page {
+    padding: 10px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .page-header h2 {
+    margin-bottom: 10px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form input,
+  .form button {
+    width: 100%;
+  }
+
+  .container {
+    font-size: 12px;
+  }
+
+  .time-column,
+  .session-column {
+    min-width: 80px;
+  }
+
+  .user-column {
+    min-width: 120px;
+  }
+
+  .modal-box {
+    width: 90%;
+    max-width: 320px;
+  }
+}
