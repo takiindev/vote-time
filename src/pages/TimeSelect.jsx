@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -64,40 +65,39 @@ export default function TimeSelect() {
     const { name, msv, dob } = form;
     if (!name || !msv || !dob) return alert("Nhập đủ thông tin");
 
-    // Validate name: at least 2 words, each >= 2 chars
+    // validate name
     const nameParts = name.trim().split(/\s+/);
-    if (nameParts.length < 2 || nameParts.some(part => part.length < 2)) {
-      return alert("Họ tên phải có ít nhất 2 từ, mỗi từ ít nhất 2 ký tự");
+    if (nameParts.length < 2 || nameParts.some(p => p.length < 2)) {
+      return alert("Họ tên phải có ít nhất 2 từ, mỗi từ >= 2 ký tự");
     }
 
-    // Validate msv: exactly 8 digits
+    // validate MSSV
     if (!/^\d{8}$/.test(msv)) {
       return alert("MSSV phải là 8 chữ số");
     }
 
-    // Validate dob: age > 18
+    // validate age
     const birthDate = new Date(dob);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      today.getMonth() < birthDate.getMonth() ||
+      (today.getMonth() === birthDate.getMonth() &&
+        today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    if (age < 18) {
-      return alert("Phải trên 18 tuổi");
-    }
+    if (age < 18) return alert("Phải trên 18 tuổi");
 
-    // Check if MSSV already exists
-    const msvQuery = query(membersCol, where("msv", "==", msv));
-    const msvSnap = await getDocs(msvQuery);
-    if (!msvSnap.empty) {
-      return alert("MSSV đã tồn tại trong sự kiện này");
-    }
+    // check duplicate MSSV
+    const q = query(membersCol, where("msv", "==", msv));
+    const snap = await getDocs(q);
+    if (!snap.empty) return alert("MSSV đã tồn tại");
 
-    const key = `${name.trim()}|${msv.trim()}|${dob}`;
+    const key = `${name.trim()}|${msv}|${dob}`;
 
     await setDoc(doc(membersCol, key), {
-      name,
+      name: name.trim(),
       msv,
       dob,
       slots: Array(HOURS).fill(false)
@@ -111,7 +111,6 @@ export default function TimeSelect() {
     const user = users[key];
     const slots = [...user.slots];
     slots[index] = !slots[index];
-
     await updateDoc(doc(membersCol, key), { slots });
   };
 
@@ -124,23 +123,17 @@ export default function TimeSelect() {
     for (let i = 0; i < HOURS; i++) {
       if (userList.every(u => u.slots[i])) {
         if (start === -1) start = i;
-      } else {
-        if (start !== -1) {
-          const end = i - 1;
-          commonSlots.push(start === end ? `${start}:00 - ${start}:59` : `${start}:00 - ${end}:59`);
-          start = -1;
-        }
+      } else if (start !== -1) {
+        commonSlots.push(`${start}:00 - ${i - 1}:59`);
+        start = -1;
       }
     }
     if (start !== -1) {
-      const end = HOURS - 1;
-      commonSlots.push(start === end ? `${start}:00 - ${start}:59` : `${start}:00 - ${end}:59`);
+      commonSlots.push(`${start}:00 - ${HOURS - 1}:59`);
     }
   }
 
-  if (!event) {
-    return <div className="page">Loading...</div>;
-  }
+  if (!event) return <div className="page">Loading...</div>;
 
   return (
     <div className="page">
@@ -171,15 +164,13 @@ export default function TimeSelect() {
 
       {/* GRID */}
       <div className="container" ref={containerRef}>
-        {/* SESSION COLUMN */}
         <div className="session-column">
           <div className="user-header">Buổi</div>
-          <div className="time-cell time-cell1 session-cell">Sáng</div>
-          <div className="time-cell time-cell2 session-cell">Chiều</div>
-          <div className="time-cell time-cell3 session-cell">Tối</div>
+          <div className="time-cell session-cell">Sáng</div>
+          <div className="time-cell session-cell">Chiều</div>
+          <div className="time-cell session-cell">Tối</div>
         </div>
 
-        {/* TIME COLUMN */}
         <div className="time-column">
           <div className="user-header">Thời gian</div>
           {Array.from({ length: HOURS }).map((_, h) => (
@@ -191,7 +182,12 @@ export default function TimeSelect() {
 
         {/* USERS */}
         {Object.entries(users).map(([key, user]) => {
-          const shortName = user.name.split(" ").pop();
+          // ✅ FIX CHÍNH Ở ĐÂY
+          const shortName = user.name
+            .trim()
+            .split(/\s+/)
+            .pop();
+
           const maskedMSV =
             user.msv.slice(0, 2) + "xxx" + user.msv.slice(-3);
 
@@ -202,7 +198,7 @@ export default function TimeSelect() {
                 <div className="tooltip">
                   {user.name}
                   <br />
-                  MSV: {maskedMSV}
+                  MSSV: {maskedMSV}
                 </div>
               </div>
 
@@ -220,15 +216,9 @@ export default function TimeSelect() {
 
       {/* RESULT */}
       <div className="result">
-        {commonSlots.length ? (
-          <>
-            <b>Thời gian chung:</b>
-            <br />
-            {commonSlots.join(", ")}
-          </>
-        ) : (
-          "Không có thời gian chung"
-        )}
+        {commonSlots.length
+          ? `Thời gian chung: ${commonSlots.join(", ")}`
+          : "Không có thời gian chung"}
       </div>
     </div>
   );
